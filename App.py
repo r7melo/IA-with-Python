@@ -1,4 +1,3 @@
-from cmath import rect
 from sys import exit
 import pygame
 import threading
@@ -8,6 +7,7 @@ class App:
 	def __init__(self) -> None:
 		self.__root = threading.Thread(target=self.__start)
 		self.__clock = pygame.time.Clock()
+		self.__keyboard = None
 		self.__screen = None
 		self.__objects = []
 
@@ -23,10 +23,14 @@ class App:
 	def build(self) -> None:
 		pass
 
+	def keyboard(self, event) -> None:
+		pass
+
 	def __upload(self) -> None:
 		for object in self.__objects:
 			object.update()
-			self.__screen.blit(object.source, object.root)
+			if object.draw:
+				self.__screen.blit(object.source, object.root)
 
 	def __start(self) -> None:
 		pygame.init()
@@ -40,6 +44,8 @@ class App:
 				if event.type == pygame.QUIT:
 					pygame.quit()
 					exit()
+				
+				self.keyboard(event)
 		    
 			self.__upload()
 			pygame.display.update()
